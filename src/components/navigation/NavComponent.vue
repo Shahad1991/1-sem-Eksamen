@@ -1,113 +1,150 @@
 <template>
-  <v-container class="nav" :style="{ backgroundColor: '#E9E5E5', padding: '0', margin:'0' }">
-    <br />
-    <v-toolbar app :style="{ backgroundColor: '#E9E5E5' }">
-      <v-col class="d-flex align-center">
-        <router-link to="/frontPage">
-          <img class="right" src="@/images/heroicons_home-20-solid.svg" />
-        </router-link>
+  <div class="nav-container">
+    <!-- Top navbar -->
+    <header class="nav-bar">
+      <button class="burger-button" @click="drawer = true">
+        <img src="@/images/hamburger-button.svg" alt="Menu" class="burger-icon" />
+      </button>
+      <LevelDisplay />
+    </header>
 
-        <router-link to="/info">
-          <img class="righ" src="@/images/info.svg" />
-        </router-link>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-toolbar-title>
-        <v-row>
-          <v-col class="d-flex align-center">
-            <!-- Tom kolonne for at centrere titlen -->
-          </v-col>
-        </v-row>
-      </v-toolbar-title>
-      <v-col class="d-flex align-center">
-        <LevelDisplay />
-      </v-col>
-    </v-toolbar>
-
-    <br />
-    <v-container class="anden-nav">
-      <router-link to="/transportComponent" @click="setActive('transportComponent')">
-        <img :class="{ active: activeImage === 'transportComponent' }" src="@/images/transport.svg" />
-      </router-link>
-
-      <router-link to="/elUse" @click="setActive('elUse')">
-        <img :class="{ active: activeImage === 'elUse' }" src="@/images/El-forbruge.svg" />
-      </router-link>
-
-      <router-link to="/genbrugeComponent" @click="setActive('genbrugeComponent')">
-        <img :class="{ active: activeImage === 'genbrugeComponent' }" src="@/images/Genbruge.svg" />
-      </router-link>
-
-      <router-link to="/foodWaste" @click="setActive('foodWaste')">
-        <img :class="{ active: activeImage === 'foodWaste' }" src="@/images/Madspile.svg" />
-      </router-link>
-    </v-container>
-  </v-container>
+    <!-- Slide-in menu -->
+    <div v-if="drawer" class="menu-overlay" @click="drawer = false">
+      <aside class="menu-content" @click.stop>
+        <button class="close-button" @click="drawer = false">X</button>
+        <ul>
+          <li @click="navigateTo('/frontPage')">Min side</li>
+          <li @click="navigateTo('/userPage')">Min træ</li>
+          <li @click="navigateTo('/info')">Info</li>
+          <li @click="logout">Log ud</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import LevelDisplay from '../features/LevelDisplay.vue';
 
-export default defineComponent({
+export default {
   name: 'NavComponent',
-  components: {
-    LevelDisplay,
-  },
+  components: { LevelDisplay },
   setup() {
-    const activeImage = ref('');
+    const drawer = ref(false);
+    const router = useRouter();
 
-    const setActive = (image) => {
-      activeImage.value = image;
+    const navigateTo = (path) => {
+      drawer.value = false;
+      router.push(path);
+    };
+
+    const logout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userName');
+      router.push('/');
     };
 
     return {
-      activeImage,
-      setActive,
+      drawer,
+      navigateTo,
+      logout
     };
-  },
-});
+  }
+};
 </script>
 
 <style scoped>
-.v-container {
-  padding: 0;
+/* 🔹 Nav-bar stil */
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  padding: 15px;
+  z-index: 1000; /* Ensure it stays on top of other elements */
 }
-.left,
-.lef {
-  width: 35px;
-  margin-left: 15px;
-}
-.lef {
-  width: 55px;
-}
-.right,
-.righ {
-  width: 45px; /* Juster størrelserne som ønsket */
-  padding-top: 5px;
-  margin-left: 15px;
-}
-.anden-nav {
+
+.nav-bar {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  height: 92px;
-  border-radius: 18px;
-  border: solid 1px #e4e5e4;
-  box-shadow: #fff 2px 2px 2px;
-  opacity: 0.9;
+  padding: 0 1rem;
+  color: white;
+  height: 56px;
 }
 
-.anden-nav img {
-  width: 50px;
-  padding-top: 5px;
-  transition: all 0.3s ease;
+.burger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.active {
-  transform: scale(1.2);
-  border: 5px solid #D3BE03;
-  box-shadow: 0 0 10px rgba(189, 185, 185, 0.5);
+.burger-icon {
+  width: 100%;
+}
+
+.LevelDisplay {
+  margin-left: auto;
+}
+
+/* 🔹 Slide-in menu */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  z-index: 1000;
+}
+
+.menu-content {
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: black;
+  padding: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #4caf50;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px; /* Plads til X-knappen */
+}
+
+li {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #4caf50;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .menu-content {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 </style>

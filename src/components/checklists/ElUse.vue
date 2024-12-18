@@ -1,35 +1,37 @@
 <template>
   <NavComponent />
-  <v-app class="energy-consumption" id="energy-consumption">
-    <v-container  :style="{ backgroundColor: '#E9E5E5', borderRadius: '25px',  width: '395px', marginBottom: '24px'}">
-
+  <MenuComponent />
+  <v-app >
+    <v-container fluid fill-height  :style="{ backgroundColor: '#000', width: '100%', padding: '24px'}">
+      <br/>
       <v-col cols="12" md="8" lg="4" class="text-center">
-        <h2 class="question">Hvordan har dit El-forbrug været?</h2>
+        <h2 class="question">Forbrug</h2>
       </v-col>
-
-      <CheckList :style="{ backgroundColor: '#32898F', width: '100%' }"
+      <CheckList
+        :style="{ width: '100%' }"
         :checklistItems="checklistItems"
         :selectedItems="selectedItems"
         @update:selectedItems="updateSelectedItems"
       />
 
+
       <ArrowComponent nextRoute="/genbrugeComponent" previousRoute="/transportComponent" />
 
-      <PointDisplay :points="totalPoints" :style="{background: '#1E7F85', borderRadius:'20px'}" />
+
     </v-container>
   </v-app>
 </template>
 
 <script>
 import CheckList from '../features/CheckList.vue';
-import PointDisplay from '../features/PointDisplay.vue';
 import NavComponent from '../navigation/NavComponent.vue';
 import ArrowComponent from '../navigation/ArrowComponent.vue';
+import MenuComponent from '../navigation/MenuComponent.vue';
 
 export default {
   name: 'ElUse',
   components: {
-    PointDisplay,
+    MenuComponent,
     CheckList,
     NavComponent,
     ArrowComponent,
@@ -56,7 +58,9 @@ export default {
   methods: {
     async fetchChecklistItems() {
       try {
-        const response = await fetch(`http://localhost:3000/api/checklists/eluse/${this.userLevel}`);
+        // Antag at category_id for 'eluse' er 1
+        const categoryId = 1;
+        const response = await fetch(`http://localhost:3000/api/checklists/${categoryId}/${this.userLevel}`);
         const data = await response.json();
         this.checklistItems = data;
       } catch (error) {
@@ -73,49 +77,15 @@ export default {
 
 <style scoped>
 .v-container {
-  justify-content: center;
-  margin: 10px;
-  background-color: #E9E5E5;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.energy-consumption {
-  background-color: #E9E5E5;
-  width: 100%;
-  padding: 0;
-
+  background: #000;
+  color: #1E7F85;
 }
 
 .question {
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-bottom: 24px;
-  color: black;
+  color: #1E7F85;
 }
 
-.checklist-card {
-  margin: 3px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.checklist-card.selected {
-  background-color: #4caf50;
-  color: white;
-}
-
-.v-row {
-  margin-top: 20px;
-}
-
-.v-label {
-  color: black;
-}
-
-.v-label {
-  color: black;
-}
 </style>
