@@ -1,8 +1,8 @@
 <template>
  <v-container class="log-in" fill-height>
 
-
-     <v-col cols="12" md="6" lg="4">
+<br/><br/><br/><br/><br/>
+     <v-col cols="12">
        <h2 :style="{ fontWeight: '700' }">Login</h2>
        <v-text-field
          v-model="name"
@@ -31,6 +31,7 @@
        >
          Login
        </v-btn>
+       <br/>
        <v-btn
          rounded="xl"
          size="x-large"
@@ -133,6 +134,8 @@ export default {
  background-position: center;
  justify-content: center;
  align-items: center;
+ flex-direction: column;
+
 }
 
 
@@ -164,7 +167,10 @@ h2 {
  background-color: #4caf50;
  border-radius: 5px;
  width: 100%;
- margin: 20px;
+ margin: 0 auto;
+ display: flex;
+ justify-content: center;
+
 }
 
 
