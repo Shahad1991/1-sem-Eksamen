@@ -41,7 +41,7 @@
      rounded="xl"
      size="x-large"
      variant="flat"
-     :style="{ border: '4px solid rgb(62, 122, 0)', width: '100%', color:'#000', maxWidth:'400px' }"
+     :style="{ border: '5px solid rgb(62, 122, 0)', width: '100%', color:'#000', maxWidth:'400px' }"
      type="submit"
    >
      Opret
